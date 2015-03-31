@@ -201,7 +201,7 @@ local lua = lpeg.locale {
           K "true" +
           V "Number" +
           V "String" +
-          K "..." +
+          C "..." +
           V "function" +
           V "tableconstructor" +
           V "functioncall" +
@@ -251,8 +251,8 @@ local lua = lpeg.locale {
 
   funcbody = C "(" * V "whitespace" * (V "parlist" * V "whitespace")^-1 * C ")" * INDENT_INCREASE(V "block" * V "whitespace") * INDENT * K "end";
 
-  parlist = V "namelist" * (V "whitespace" * C "," * SPACE * V "whitespace" * K "...")^-1 +
-            K "...";
+  parlist = V "namelist" * (V "whitespace" * C "," * SPACE * V "whitespace" * C "...")^-1 +
+            C "...";
 
   tableconstructor = FLATTEN(C "{" * (INDENT_INCREASE(V "filler" * V "fieldlist" * V "filler") * INDENT + V "filler") * C "}");
 
