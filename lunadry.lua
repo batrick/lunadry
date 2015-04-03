@@ -299,12 +299,12 @@ local function luafilter (...)
     if DEBUG then
       local level = 0;
       for k, p in pairs(lua) do
-        local enter = lpeg.Cmt(lpeg.P(true), function (s, p)
+        local enter = Cmt(P(true), function (s, p)
           stderr:write((" "):rep(level*2), "ENTER ", k, ": ", s:sub(p, p), "\n");
           level = level+1;
           return true;
         end);
-        local match = lpeg.Cmt(lpeg.P(true), function (s, p)
+        local match = Cmt(P(true), function (s, p)
           level = level-1;
           if k == "space" or k == "comment" then
             return true;
@@ -313,7 +313,7 @@ local function luafilter (...)
             return true;
           end
         end);
-        local leave = lpeg.Cmt(lpeg.P(true), function (s, p)
+        local leave = Cmt(P(true), function (s, p)
           level = level-1;
           stderr:write((" "):rep(level*2), "LEAVE ", k, "\n");
           return false;
