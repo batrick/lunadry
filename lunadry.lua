@@ -318,7 +318,7 @@ local function luafilter (...)
           stderr:write((" "):rep(level*2), "LEAVE ", k, "\n");
           return false;
         end);
-        lua[k] = enter * p * match + leave;
+        lua[k] = enter * p * match + leave * (P "k" - P "k") -- use a trick '(P "k" - P "k")' to avoid lpeg left recursion false error
       end
     end
 
