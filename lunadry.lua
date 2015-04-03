@@ -1,3 +1,5 @@
+#!/usr/bin/env lua
+
 --    Lunadry -- A code formatter.
 --    Copyright (C) 2014 Patrick Joseph Donnelly
 --
