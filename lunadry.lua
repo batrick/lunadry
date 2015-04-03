@@ -294,35 +294,38 @@ local function luafilter (...)
       unop = (C "-" - P "--") +
              C "#" +
              K "not" * SPACE;
-    };
+    }
 
     if DEBUG then
-      local level = 0;
+      local level = 0
+      local function escape (s, p, n)
+        return s:sub(p, p+n):gsub("[^%g ]", setmetatable({["\n"] = "\\n", ["\t"] = "\\t"}, {__index = function (t, c) return ("\\x%02X"):format(c:byte()) end}))
+      end
       for k, p in pairs(lua) do
         local enter = Cmt(P(true), function (s, p)
-          stderr:write((" "):rep(level*2), "ENTER ", k, ": ", s:sub(p, p), "\n");
-          level = level+1;
-          return true;
-        end);
+          stderr:write(("%sENTER %s '%s'\n"):format((" "):rep(level*2), k, escape(s, p, 16)))
+          level = level+1
+          return true
+        end)
         local match = Cmt(P(true), function (s, p)
-          level = level-1;
+          level = level-1
           if k == "space" or k == "comment" then
-            return true;
+            return true
           else
-            stderr:write((" "):rep(level*2), "MATCH ", k, "\n", s:sub(p - 200 < 0 and 1 or p-200, p-1), "\n");
-            return true;
+            stderr:write(("%sMATCH %s '%s'\n"):format((" "):rep(level*2), k, escape(s, p, 16)))
+            return true
           end
-        end);
+        end)
         local leave = Cmt(P(true), function (s, p)
-          level = level-1;
-          stderr:write((" "):rep(level*2), "LEAVE ", k, "\n");
-          return false;
-        end);
+          level = level-1
+          stderr:write(("%sLEAVE %s\n"):format((" "):rep(level*2), k))
+          return false
+        end)
         lua[k] = enter * p * match + leave * (P "k" - P "k") -- use a trick '(P "k" - P "k")' to avoid lpeg left recursion false error
       end
     end
 
-    return P(lua);
+    return P(lua)
 end
 
 local function checkbytecode (f1, f2)
