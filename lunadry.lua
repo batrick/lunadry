@@ -90,9 +90,9 @@ local function luafilter (...)
 
       -- keywords
 
-      keywords = K "and" + K "break" + K "do" + K "else" + K "elseif" +
-                 K "end" + K "false" + K "for" + K "function" + K "if" +
-                 K "in" + K "local" + K "nil" + K "not" + K "or" + K "repeat" +
+      keywords = K "and" + K "break" + K "do" + K "else" + K "elseif" + --
+                 K "end" + K "false" + K "for" + K "function" + K "if" + --
+                 K "in" + K "local" + K "nil" + K "not" + K "or" + K "repeat" + --
                  K "return" + K "then" + K "true" + K "until" + K "while";
 
       -- longstrings
@@ -114,7 +114,7 @@ local function luafilter (...)
       comment = V "multi_line_comment" + V "one_line_comment" * INDENT;
 
       whitespace = (V "space" + (SPACE * V "comment" * SPACE))^0;
-      space_after_stat = ((V "space" - P "\n")^0 * (P ";")^-1 * (V "space" - P "\n")^0 * SPACE * V "one_line_comment") +
+      space_after_stat = ((V "space" - P "\n")^0 * (P ";")^-1 * (V "space" - P "\n")^0 * SPACE * V "one_line_comment") + --
                          (V "whitespace" * P ";")^-1 * NEWLINE;
 
       -- match "filler" comments
@@ -129,11 +129,11 @@ local function luafilter (...)
       Name = C((V "alpha" + P "_") * (V "alnum" + P "_")^0) - V "keywords";
       BinaryExponent = S "pP" * (P "-")^-1 * V "digit"^1;
       DecimalExponent = S "eE" * (P "-")^-1 * V "digit"^1;
-      Number = C((P "-")^-1 * V "whitespace" * P "0" * S "xX" * V "xdigit"^1 * (P "." * V "xdigit"^0)^-1 * V "BinaryExponent"^-1 * -(V "alnum" + P "_")) +
-               C((P "-")^-1 * V "whitespace" * V "digit"^1 * (P "." * V "digit"^0)^-1 * V "DecimalExponent"^-1 * -(V "alnum" + P "_")) +
+      Number = C((P "-")^-1 * V "whitespace" * P "0" * S "xX" * V "xdigit"^1 * (P "." * V "xdigit"^0)^-1 * V "BinaryExponent"^-1 * -(V "alnum" + P "_")) + --
+               C((P "-")^-1 * V "whitespace" * V "digit"^1 * (P "." * V "digit"^0)^-1 * V "DecimalExponent"^-1 * -(V "alnum" + P "_")) + --
                C((P "-")^-1 * V "whitespace" * P "." * V "digit"^1 * V "DecimalExponent"^-1 * -(V "alnum" + P "_"));
-      String = C(P "\"" * (P "\\" * P(1) + (1 - P "\""))^0 * P "\"") +
-               C(P "'" * (P "\\" * P(1) + (1 - P "'"))^0 * P "'") +
+      String = C(P "\"" * (P "\\" * P(1) + (1 - P "\""))^0 * P "\"") + --
+               C(P "'" * (P "\\" * P(1) + (1 - P "'"))^0 * P "'") + --
                V "longstring";
 
       -- Lua Complete Syntax
@@ -142,21 +142,21 @@ local function luafilter (...)
 
       block = V "chunk";
 
-      stat = P ";" +
-             V "label" +
-             K "break" +
-             K "goto" * SPACE * V "whitespace" * V "Name" +
-             K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" +
-             K "while" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" +
-             K "repeat" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "until" * SPACE * V "whitespace" * V "_oneline_exp" +
-             K "if" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "then" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * (INDENT * K "elseif" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "then" * INDENT_INCREASE(V "filler" * V "block" * V "filler"))^0 * (INDENT * K "else" * INDENT_INCREASE(V "filler" * V "block" * V "filler"))^-1 * INDENT * K "end" +
-             K "for" * SPACE * V "whitespace" * V "Name" * V "whitespace" * SPACE * C "=" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * C "," * SPACE * V "whitespace" * V "_oneline_exp" * (V "whitespace" * C "," * SPACE * V "whitespace" * V "_oneline_exp")^-1 * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" +
-             K "for" * SPACE * V "whitespace" * V "namelist" * V "whitespace" * SPACE * K "in" * SPACE * V "whitespace" * V "explist" * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" +
-             K "function" * SPACE * V "whitespace" * V "funcname" * SPACE * V "whitespace" * V "funcbody" +
-             K "local" * SPACE * V "whitespace" * K "function" * SPACE * V "whitespace" * V "Name" * V "whitespace" * SPACE * V "funcbody" +
-             K "local" * SPACE * V "whitespace" * V "namelist" * (SPACE * V "whitespace" * C "=" * SPACE * V "whitespace" * V "explist")^-1 * V "_check_ambiguous" +
-             V "_function_declaration" +
-             V "varlist" * V "whitespace" * SPACE * C "=" * SPACE * V "whitespace" * V "explist" * V "_check_ambiguous" +
+      stat = P ";" + --
+             V "label" + --
+             K "break" + --
+             K "goto" * SPACE * V "whitespace" * V "Name" + --
+             K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" + --
+             K "while" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" + --
+             K "repeat" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "until" * SPACE * V "whitespace" * V "_oneline_exp" + --
+             K "if" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "then" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * (INDENT * K "elseif" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * SPACE * K "then" * INDENT_INCREASE(V "filler" * V "block" * V "filler"))^0 * (INDENT * K "else" * INDENT_INCREASE(V "filler" * V "block" * V "filler"))^-1 * INDENT * K "end" + --
+             K "for" * SPACE * V "whitespace" * V "Name" * V "whitespace" * SPACE * C "=" * SPACE * V "whitespace" * V "_oneline_exp" * V "whitespace" * C "," * SPACE * V "whitespace" * V "_oneline_exp" * (V "whitespace" * C "," * SPACE * V "whitespace" * V "_oneline_exp")^-1 * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" + --
+             K "for" * SPACE * V "whitespace" * V "namelist" * V "whitespace" * SPACE * K "in" * SPACE * V "whitespace" * V "explist" * V "whitespace" * SPACE * K "do" * INDENT_INCREASE(V "filler" * V "block" * V "filler") * INDENT * K "end" + --
+             K "function" * SPACE * V "whitespace" * V "funcname" * SPACE * V "whitespace" * V "funcbody" + --
+             K "local" * SPACE * V "whitespace" * K "function" * SPACE * V "whitespace" * V "Name" * V "whitespace" * SPACE * V "funcbody" + --
+             K "local" * SPACE * V "whitespace" * V "namelist" * (SPACE * V "whitespace" * C "=" * SPACE * V "whitespace" * V "explist")^-1 * V "_check_ambiguous" + --
+             V "_function_declaration" + --
+             V "varlist" * V "whitespace" * SPACE * C "=" * SPACE * V "whitespace" * V "explist" * V "_check_ambiguous" + --
              V "functioncall" * V "_check_ambiguous";
 
       -- If the script uses a semicolon to avoid an ambiguous syntax situation, we keep it.
@@ -195,31 +195,31 @@ local function luafilter (...)
 
       _deparenthesis_value = P "(" * V "whitespace" * (V "_deparenthesis_value" + V "_value_simple") * V "whitespace" * P ")";
 
-      _value_simple = K "nil" +
-                     K "false" +
-                     K "true" +
-                     V "Number" +
-                     V "String" +
-                     V "function" +
-                     V "tableconstructor" +
+      _value_simple = K "nil" + --
+                     K "false" + --
+                     K "true" + --
+                     V "Number" + --
+                     V "String" + --
+                     V "function" + --
+                     V "tableconstructor" + --
                      V "var";
 
       -- Something that represents a value (or many values)
-      value = K "nil" +
-              K "false" +
-              K "true" +
-              V "Number" +
-              V "String" +
-              C "..." +
-              V "function" +
-              V "tableconstructor" +
-              V "functioncall" +
-              V "var" +
+      value = K "nil" + --
+              K "false" + --
+              K "true" + --
+              V "Number" + --
+              V "String" + --
+              C "..." + --
+              V "function" + --
+              V "tableconstructor" + --
+              V "functioncall" + --
+              V "var" + --
               V "_deparenthesis_value" + -- remove redundant parenthesis
               C "(" * V "whitespace" * V "exp" * V "whitespace" * C ")";
 
       -- An expression operates on values to produce a new value or is a value
-      exp = V "unop" * V "whitespace" * V "exp" +
+      exp = V "unop" * V "whitespace" * V "exp" + --
             V "value" * (V "whitespace" * V "binop" * V "whitespace" * V "exp")^-1;
 
       -- This is an expression which is always truncated to 1 result, and so we can remove
@@ -275,20 +275,21 @@ local function luafilter (...)
       fieldsep = C "," +
                  P ";" * Cc ","; -- use only commas
 
-      binop = SPACE * K "and" * SPACE + -- match longest token sequences first
-              SPACE * K "or" * SPACE +
-              SPACE * C ".." * SPACE +
-              SPACE * C "<=" * SPACE +
-              SPACE * C ">=" * SPACE +
-              SPACE * C "==" * SPACE +
-              SPACE * C "~=" * SPACE +
-              SPACE * C "+" * SPACE +
-              SPACE * (C "-" - P "--") * SPACE +
-              SPACE * C "*" * SPACE +
-              SPACE * C "/" * SPACE +
+      -- match longest token sequences first
+      binop = SPACE * K "and" * SPACE + --
+              SPACE * K "or" * SPACE + --
+              SPACE * C ".." * SPACE + --
+              SPACE * C "<=" * SPACE + --
+              SPACE * C ">=" * SPACE + --
+              SPACE * C "==" * SPACE + --
+              SPACE * C "~=" * SPACE + --
+              SPACE * C "+" * SPACE + --
+              SPACE * (C "-" - P "--") * SPACE + --
+              SPACE * C "*" * SPACE + --
+              SPACE * C "/" * SPACE + --
               C "^" + -- no space for power
-              SPACE * C "%" * SPACE +
-              SPACE * C "<" * SPACE +
+              SPACE * C "%" * SPACE + --
+              SPACE * C "<" * SPACE + --
               SPACE * C ">" * SPACE;
 
       unop = (C "-" - P "--") +
