@@ -283,6 +283,12 @@ local function luafilter (...)
               SPACE * C ">=" * SPACE + --
               SPACE * C "==" * SPACE + --
               SPACE * C "~=" * SPACE + --
+              SPACE * C "//" * SPACE + --
+              SPACE * C "<<" * SPACE + --
+              SPACE * C ">>" * SPACE + --
+              SPACE * C "&" * SPACE + --
+              SPACE * C "~" * SPACE + --
+              SPACE * C "|" * SPACE + --
               SPACE * C "+" * SPACE + --
               SPACE * (C "-" - P "--") * SPACE + --
               SPACE * C "*" * SPACE + --
@@ -294,6 +300,7 @@ local function luafilter (...)
 
       unop = (C "-" - P "--") +
              C "#" +
+             C "~" +
              K "not" * SPACE;
     }
 
