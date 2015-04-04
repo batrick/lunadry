@@ -102,7 +102,7 @@ local function luafilter (...)
 
         open = "[" * Cg((P "=")^0, "init") * P "[" * (P "\n")^-1;
         close = "]" * C((P "=")^0) * "]";
-        closeeq = Cmt(V "close" * Cb "init", function (s, i, a, b) return a == b end)
+        closeeq = Cmt(V "close" * Cb "init", function (s, i, a, b) return a == b end);
       };
 
       -- comments & whitespace
