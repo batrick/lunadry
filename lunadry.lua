@@ -60,6 +60,9 @@ local function luafilter (...)
     local SPACE = Cb "space";
     local INDENT_SPACE = Cb "indent_space";
     local function INDENT_INCREASE (p, nonewline)
+      -- The outermost group capture is to scope the increased indentation so that:
+      --     INDENT_INCREASE(foo) * bar
+      -- does not effect the indentation of bar.
       if nonewline then
         return Cg(Cg(Cb "indent" * INDENT_SPACE, "indent") * p);
       else
