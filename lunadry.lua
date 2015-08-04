@@ -264,7 +264,7 @@ local function luafilter (...)
                 C "...";
 
       tableconstructor = C "{" * V "space"^0 * C "}" + -- check for empty tableconstructor
-                         FLATTEN(C "{" * (INDENT_INCREASE(V "filler" * V "fieldlist" * V "filler") * INDENT + V "filler") * C "}");
+                         FLATTEN(C "{" * INDENT_INCREASE(V "filler" * (V "fieldlist" * V "filler")^-1) * NEWLINE * INDENT * C "}");
 
       field_space_after = (V "space" - P "\n")^0 * SPACE * V "one_line_comment";
       fieldlist = INDENT * FLATTEN(V "field") * (V "whitespace" * V "fieldsep" * (V "field_space_after" + NEWLINE) * V "filler" * INDENT * FLATTEN(V "field"))^0 * (V "whitespace" * V "fieldsep" + Cc ",")^-1 * (V "field_space_after" + NEWLINE);
