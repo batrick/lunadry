@@ -434,8 +434,14 @@ local function main (...)
             if input then
                 local filtered, err = filter(input)
                 if filtered then
-                    local outpath = path..".lunadry"
-                    local out = io.open(outpath, "w")
+                    local out, outpath;
+                    if f == io.stdin then
+                        outpath = "[stdout]"
+                        out = io.stdout
+                    else
+                        outpath = path..".lunadry"
+                        out = io.open(outpath, "w")
+                    end
                     if out then
                         local _, err = out:write(filtered)
                         if err then
